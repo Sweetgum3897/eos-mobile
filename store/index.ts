@@ -40,6 +40,7 @@ export const useAppStore = create<TAppStore>((set) => {
     showedTooltip: false,
     typeAddFriend: '',
     chartData: {},
+    availableMessages: 5,
     keys: {},
     setAuthorized: (authorized: boolean) => set(() => ({ authorized })),
     setTooltipVisibility: async (visible: boolean) => {

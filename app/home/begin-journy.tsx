@@ -50,6 +50,7 @@ export default function BeginJournyScreen() {
   const [conversationId, setHistoryId] = useState<number>(parseInt(params.conversationId));
 
   const userInfo = useAppStore((state) => state.userInfo);
+  const setUserInfo = useAppStore((state) => state.setUserInfo);
 
   const getConversation = async () => {
     try {
@@ -91,6 +92,10 @@ export default function BeginJournyScreen() {
         ]);
         setQuestion('');
         setHistoryId(response.data.conversationId);
+        setUserInfo({
+          ...userInfo,
+          availableMessages: Number(userInfo.availableMessages) - 1,
+        });
       }
     } catch (error) {
       console.log(error);
