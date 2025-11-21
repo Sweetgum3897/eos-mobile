@@ -1,4 +1,4 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Image } from 'expo-image';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +37,7 @@ const quotIcon = '../assets/svg/home/quot.svg';
 const starIcon = '../assets/svg/home/star.svg';
 const xbookIcon = '../assets/svg/home/xbook.svg';
 
-GoogleSignin.configure();
+// GoogleSignin.configure();
 
 export const Settings = ({ close }: { close: () => void }) => {
   const { t } = useTranslation();
@@ -64,8 +64,8 @@ export const Settings = ({ close }: { close: () => void }) => {
   const _logout = useAppStore((state) => state.logout);
 
   const logout = async () => {
-    await GoogleSignin.hasPlayServices();
-    await GoogleSignin.signOut();
+    // await GoogleSignin.hasPlayServices();
+    // await GoogleSignin.signOut();
     _logout();
   };
 
