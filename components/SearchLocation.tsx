@@ -1,8 +1,10 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import { Image } from 'expo-image';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { GooglePlacesAutocomplete, Point } from 'react-native-google-places-autocomplete';
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 import { TextWrapper } from '@/components/ui';
 import { useAppStore } from '@/store';
@@ -22,6 +24,25 @@ export const SearchLocation = ({
 }) => {
   const { googlePlacesApiKey } = useAppStore((state) => state.keys);
   const { t } = useTranslation();
+
+  const [location, setLocation] = useState<Region | null>(null);
+  const [address, setAddress] = useState('');
+
+  const handlePlaceSelect = (data: any, details: any | null) => {
+    if (!details || !details.geometry) return;
+
+    const { lat, lng } = details.geometry.location;
+    console.log('details in googlepalces: ', lat, lng);
+
+    setAddress(details.formatted_address);
+
+    setLocation({
+      latitude: lat,
+      longitude: lng,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+  };
 
   return (
     <Modal
@@ -52,37 +73,52 @@ export const SearchLocation = ({
             <MaterialCommunityIcons name="window-close" size={22} color="#757b93" />
           </TouchableOpacity>
         </View>
-        <View style={{ padding: 6, marginTop: 20, height: '100%' }}>
+        <View style={{ flex: 1 }}>
           <GooglePlacesAutocomplete
-            placeholder={t('requireBirthplace')}
-            query={{
-              key: googlePlacesApiKey,
-              language: 'en', // language of the results
-            }}
+            keyboardShouldPersistTaps="always"
+            placeholder="Search"
             fetchDetails={true}
-            isRowScrollable={true}
+            onPress={handlePlaceSelect}
+            minLength={2}
+            debounce={300}
+            currentLocation={false}
             enablePoweredByContainer={false}
-            listViewDisplayed={false}
-            onPress={(data, details = null) => {
-              setBirthPlace(details?.formatted_address);
-              setUTCOffset((details?.utc_offset || 0) / 60);
-              setGeometry(details?.geometry.location);
-              setVisible(false);
-            }}
-            onFail={(error) => console.error(error)}
-            styles={{
-              textInput: {
-                borderRadius: 13,
-                borderColor: 'black',
-                color: '#181818',
-                borderWidth: 1,
-                backgroundColor: 'transparent',
+            predefinedPlaces={[]}
+            timeout={200}
+            keepResultsAfterBlur={true}
+            textInputProps={{
+              onBlur: () => {
+                console.warn('Blur');
               },
             }}
-            textInputProps={{
-              placeholderTextColor: '#181818',
+            query={{
+              key: 'AIzaSyD2_WtpeE19mJhmdNIZjAXVKTIHktD4Z1I',
+              language: 'en',
+              location: '37.7749,-122.4194', // e.g., San Francisco
+              radius: 30000,
+            }}
+            styles={{
+              container: {
+                position: 'absolute',
+                top: 50,
+                width: '100%',
+                zIndex: 1,
+              },
+              listView: {
+                backgroundColor: 'white',
+              },
             }}
           />
+          {address ? (
+            <Image
+              source={
+                `https://maps.googleapis.com/maps/api/staticmap?center=` +
+                address +
+                `&zoom=12&size=400x300&key=AIzaSyD2_WtpeE19mJhmdNIZjAXVKTIHktD4Z1I`
+              }
+              style={{ width: 400, height: 300 }}
+            />
+          ) : null}
         </View>
       </View>
     </Modal>

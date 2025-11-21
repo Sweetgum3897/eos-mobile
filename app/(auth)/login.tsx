@@ -1,4 +1,4 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -21,7 +21,7 @@ import { PrivacyPolicy, SuccessSentVerifyCode, TermsOfUse } from '@/sections';
 
 import { useAppStore } from '../../store';
 
-GoogleSignin.configure();
+// GoogleSignin.configure();
 
 const facebookIcon = '../../assets/svg/facebookIcon.svg';
 const googleIcon = '../../assets/svg/googleIcon.svg';
@@ -59,42 +59,42 @@ export default function LoginScreen() {
   const phoneInput = useRef(null);
 
   const googleSignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      if (response.type === 'success') {
-        const { idToken, accessToken } = await GoogleSignin.getTokens();
-        const { email, name, photo } = response.data.user;
-        setUserInfo({
-          ...userInfo,
-          fullname: name || '',
-          email,
-          avatar: photo || '',
-        });
-        setEmailId(email);
-        const googleSignResponse = await googleSign({ idToken, accessToken });
-        if (!googleSignResponse.data.user && googleSignResponse.data.accessToken === '') {
-          router.push('/register');
-        } else if (!googleSignResponse.data.user) {
-          setModalText('Faild google authentication');
-          setVisibleModal(true);
-        } else {
-          setUserInfo({
-            ...googleSignResponse.data.user,
-            accessToken: googleSignResponse.data.accessToken,
-            refreshToken: googleSignResponse.data.refreshToken,
-          });
-          setAuthorized(true);
-          setTimeout(() => {
-            router.push('/');
-          }, 500);
-        }
-      } else {
-        // sign in was cancelled by user
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   await GoogleSignin.hasPlayServices();
+    //   const response = await GoogleSignin.signIn();
+    //   if (response.type === 'success') {
+    //     const { idToken, accessToken } = await GoogleSignin.getTokens();
+    //     const { email, name, photo } = response.data.user;
+    //     setUserInfo({
+    //       ...userInfo,
+    //       fullname: name || '',
+    //       email,
+    //       avatar: photo || '',
+    //     });
+    //     setEmailId(email);
+    //     const googleSignResponse = await googleSign({ idToken, accessToken });
+    //     if (!googleSignResponse.data.user && googleSignResponse.data.accessToken === '') {
+    //       router.push('/register');
+    //     } else if (!googleSignResponse.data.user) {
+    //       setModalText('Faild google authentication');
+    //       setVisibleModal(true);
+    //     } else {
+    //       setUserInfo({
+    //         ...googleSignResponse.data.user,
+    //         accessToken: googleSignResponse.data.accessToken,
+    //         refreshToken: googleSignResponse.data.refreshToken,
+    //       });
+    //       setAuthorized(true);
+    //       setTimeout(() => {
+    //         router.push('/');
+    //       }, 500);
+    //     }
+    //   } else {
+    //     // sign in was cancelled by user
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const switchMobileEmail = () => {
